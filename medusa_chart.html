@@ -1,0 +1,377 @@
+<html>
+<head>
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css" rel="stylesheet" type="text/css" />
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+
+    <style type="text/css">
+        #sideMenu{ display: none; }
+
+        body{ background-color: #ffffff; }
+       
+        #main_box{ position:absolute; padding:0px; margin:0px; background-color: #ffffff; width:100%; height:100%; }
+
+        #mynetwork {
+            width: 100%;
+            height: 700px;
+            background-color: white;
+            z-index: 100;
+        }
+		
+		#details_box{
+			float: right;
+			width: 44.5%;
+			height: 680px;
+			text-align: center;
+                        z-index:99;
+                        background-color: white;
+                        opacity:0;
+                        transition: opacity 1s linear;
+                        -webkit-transition: opacity 1s linear;
+                        -moz-transition: opacity 1s linear;
+                        -o-transition: opacity 1s linear;
+                        display: none;
+		}
+		
+		.twoChildren {
+			position: relative;
+			display: inline-block;
+		}
+    </style>
+</head>
+<body>
+<div id='instruction_box' style='position:absolute; background-color:#ffffff; z-index: 1000; font-size:15px; font-family:Century Gothic; width: 450px; height: 150px; border:1px solid #ddd; padding: 5px 15px 5px 15px;'>
+   <ul><b>INTERACTIVITY CONTROLS</b></ul>
+   <li>Move the graph by clicking and dragging in a blank area</li>
+   <li>Zoom in or out with your mouse wheel</li>
+   <li>Hover on the nodes to see the team's name</li>
+   <li>Click on the rectangular notes for more information on the collaboration project</li>
+   <span style='position:relative; float:right;'><input type='button' value='X' onclick='$("#instruction_box").css("display","none");$("#showback").css("display","block");' style='background: transparent'/></span>
+</div>
+<div id='showback' style='position:absolute; z-index:999'><span style='position:relative; float:right;'><input type='button' value='Show instructions' onclick='$("#instruction_box").css("display","block");$("#showback").css("display","none");' style='background: transparent'/></span></div>
+<div id='main_box'>
+
+<div class='twoChildren' id="mynetwork"></div>
+
+<div class='twoChildren' id='details_box'>
+	<span id='title' style='position:relative; display:block; padding:0px 0px 25px 0px; height:50px;' ><h1></h1></span>
+	<span id='details' style='position:relative; display:block; padding:5px 0px 0px 0px; height:600px;' ></span>
+</div>
+
+</div>
+<pre id="eventSpan" style='display:none;'></pre>
+
+<input type='hidden' id='Node_27' value='This is NODE 27' name='Title for node 27'/>
+<input type='hidden' id='Node_29' value='This is NODE 29' name='Title for node 29'/>
+<input type='hidden' id='Node_30' value='This is NODE 30' name='Title for node 30'/>
+
+<script type="text/javascript">
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        {id: 1, label: '', title: 'Cologne-Dusseldorf', group: 'groupA', image: 'http://2017.igem.org/wiki/images/c/c9/GreeKom_collabs_graph_dusseldorf.png', size: 75},
+        {id: 2, label: '', title: 'Aalto-Helsinki', group: 'groupA', image: 'http://2017.igem.org/wiki/images/5/52/GreeKom_collabs_graph_aalto.png'},
+        {id: 3, label: '', title: 'NYU Abu Dhabi', group: 'groupA', image: 'http://2017.igem.org/wiki/images/8/8e/GreeKom_collabs_graph_abudahbi.png'},
+        {id: 4, label: '', title: 'Aix-Marseille', group: 'groupA', image: 'http://2017.igem.org/wiki/images/2/2d/GreeKom_collabs_graph_aix.png'},
+        {id: 5, label: '', title: 'Bielefeld-CeBiTec', group: 'groupA', image: 'http://2017.igem.org/wiki/images/5/53/GreeKom_collabs_graph_bielefeld.png'},
+        {id: 6, label: '', title: 'Bonn', group: 'groupA', image: 'http://2017.igem.org/wiki/images/d/d6/GreeKom_collabs_graph_bonn.png'},
+        {id: 7, label: '', title: 'Columbia NYC', group: 'groupA', image: 'http://2017.igem.org/wiki/images/0/0f/GreeKom_collabs_graph_columbia.png'},
+        {id: 8, label: '', title: 'TU Darmstadt', group: 'groupA', image: 'http://2017.igem.org/wiki/images/9/9a/GreeKom_collabs_graph_darmstadt.png'},
+        {id: 9, label: '', title: 'ECUST', group: 'groupA', image: 'http://2017.igem.org/wiki/images/7/7a/GreeKom_collabs_graph_ecust.png'},
+        {id: 10, label: '', title: 'TU Eindhoven', group: 'groupA', image: 'http://2017.igem.org/wiki/images/8/88/GreeKom_collabs_graph_eindhoven.png'},
+        {id: 11, label: '', title: 'Franconia', group: 'groupA', image: 'http://2017.igem.org/wiki/images/e/e0/GreeKom_collabs_graph_franconia.png'},
+        {id: 12, label: '', title: 'Groningen', group: 'groupA', image: 'http://2017.igem.org/wiki/images/5/55/GreeKom_collabs_graph_groningen.png'},
+        {id: 13, label: '', title: 'Hamburg', group: 'groupA', image: 'http://2017.igem.org/wiki/images/7/74/GreeKom_collabs_graph_hamburg.png'},
+        {id: 14, label: '', title: 'Heidelberg', group: 'groupA', image: 'http://2017.igem.org/wiki/images/1/12/GreeKom_collabs_graph_heidelberg.png'},
+        {id: 15, label: '', title: 'Northwestern', group: 'groupA', image: 'http://2017.igem.org/wiki/images/8/82/GreeKom_collabs_graph_northwestern.png'},
+        {id: 16, label: '', title: 'Potsdam', group: 'groupA', image: 'http://2017.igem.org/wiki/images/3/3f/GreeKom_collabs_graph_postdam.png'},
+        {id: 17, label: '', title: 'RPI Troy NY', group: 'groupA', image: 'http://2017.igem.org/wiki/images/c/c2/GreeKom_collabs_graph_rpi.png'},
+        {id: 18, label: '', title: 'Sydney', group: 'groupA', image: 'http://2017.igem.org/wiki/images/e/e0/GreeKom_collabs_graph_sydney.png'},
+        {id: 19, label: '', title: 'INSA-UPS Toulouse', group: 'groupA', image: 'http://2017.igem.org/wiki/images/4/4e/GreeKom_collabs_graph_toulouse.png'},
+        {id: 20, label: '', title: 'Tübingen', group: 'groupA', image: 'http://2017.igem.org/wiki/images/6/6c/GreeKom_collabs_graph_tubingen.png'},
+        {id: 21, label: '', title: 'Uppsala', group: 'groupA', image: 'http://2017.igem.org/wiki/images/a/a0/GreeKom_collabs_graph_uppsala.png'},
+        {id: 22, label: '', title: 'Utrecht', group: 'groupA', image: 'http://2017.igem.org/wiki/images/a/a3/GreeKom_collabs_graph_utrecht.png'},
+        {id: 23, label: '', title: 'UPV Valencia', group: 'groupA', image: 'http://2017.igem.org/wiki/images/8/85/GreeKom_collabs_graph_valencia.png'},
+        {id: 24, label: '', title: 'Wageningen UR', group: 'groupA', image: 'http://2017.igem.org/wiki/images/3/39/GreeKom_collabs_graph_wageningen.png'},
+        {id: 25, label: '', title: 'UNIFI', group: 'groupA', image: 'http://2017.igem.org/wiki/images/0/08/GreeKom_collabs_graph_unifi.png'},
+        {id: 26, label: '', title: 'Aachen', group: 'groupA', image: 'http://2017.igem.org/wiki/images/1/17/GreeKom_collabs_graph_aachen.png'},
+
+        {id: 31, label: '', title: 'TU Dresden', group: 'groupA', image: ''},
+
+        {id: 27, label: 'Postcard', group: 'groupD', shape: 'box'},
+
+        {id: 28, label: '', title: 'Greece', group: 'groupD', image: 'http://2017.igem.org/wiki/images/c/c0/GreeKom_collabs_graph_greece.png', size: 100},
+
+        {id: 29, label: 'O.S.I.R.I.S.', group: 'groupD', shape: 'box'},
+        {id: 30, label: 'Quorum Sensing', group: 'groupD', shape: 'box'}
+
+    ]);
+
+    // create an array with edges
+    var edges = new vis.DataSet([
+        {from: 1, to: 2},
+        {from: 1, to: 3},
+        {from: 1, to: 4},
+        {from: 1, to: 5},
+	{from: 1, to: 6},
+        {from: 1, to: 7},
+        {from: 1, to: 8},
+        {from: 1, to: 9},
+        {from: 1, to: 10},
+	{from: 1, to: 11},
+        {from: 1, to: 12},
+        {from: 1, to: 13},
+        {from: 1, to: 14},
+        {from: 1, to: 15},
+	{from: 1, to: 16},
+        {from: 1, to: 17},
+        {from: 1, to: 18},
+        {from: 1, to: 19},
+        {from: 1, to: 20},
+	{from: 1, to: 21},
+	{from: 1, to: 22},
+	{from: 1, to: 23},
+	{from: 1, to: 24},
+	{from: 1, to: 25},
+	{from: 1, to: 26},
+        {from: 1, to: 31},
+        {from: 1, to: 27, length: 450},
+        {from: 27, to: 28, length: 350},
+        {from: 28, to: 29},
+        {from: 28, to: 30}
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+	
+	//Options for each thing in network (styles etc)
+    var options = {
+		nodes:{
+			borderWidth: 1,
+			borderWidthSelected: 2,
+			brokenImage:'https://cldup.com/0IRxBwvTKJ.png',
+			chosen: true,
+			color: {
+				border: '#2B7CE9',
+				background: '#ffffff',
+				highlight: {
+					border: '#2B7CE9',
+					background: '#D2E5FF'
+				},
+				hover: {
+					border: '#2B7CE9',
+					background: '#D2E5FF'
+				}
+			},
+			fixed: {
+			  x:false,
+			  y:false
+			},
+			font: {
+			  color: '#343434',
+			  size: 14, // px
+			  face: 'Century Gothic',
+			  background: 'none',
+			  strokeWidth: 0, // px
+			  strokeColor: '#ffffff',
+			  align: 'center',
+			  multi: false,
+			  vadjust: 0,
+			  bold: {
+				color: '#343434',
+				size: 14, // px
+				face: 'arial',
+				vadjust: 0,
+				mod: 'bold'
+			  },
+			  ital: {
+				color: '#343434',
+				size: 14, // px
+				face: 'arial',
+				vadjust: 0,
+				mod: 'italic',
+			  },
+			  boldital: {
+				color: '#343434',
+				size: 14, // px
+				face: 'arial',
+				vadjust: 0,
+				mod: 'bold italic'
+			  },
+			  mono: {
+				color: '#343434',
+				size: 15, // px
+				face: 'courier new',
+				vadjust: 2,
+				mod: ''
+			  }
+			},
+			group: undefined,
+			heightConstraint: false,
+			hidden: false,
+			icon: {
+			  face: 'FontAwesome',
+			  size: 50,
+			  color:'#2B7CE9'
+			},
+			image: 'https://cldup.com/0IRxBwvTKJ.png',
+			label: undefined,
+			labelHighlightBold: true,
+			level: undefined,
+			mass: 1,
+			physics: true,
+			scaling: {
+			  min: 10,
+			  max: 30,
+			  label: {
+				enabled: false,
+				min: 14,
+				max: 30,
+				maxVisible: 30,
+				drawThreshold: 5
+			  },
+			  customScalingFunction: function (min,max,total,value) {
+				if (max === min) {
+				  return 0.5;
+				}
+				else {
+				  let scale = 1 / (max - min);
+				  return Math.max(0,(value - min)*scale);
+				}
+			  }
+			},
+			shadow:{
+			  enabled: false,
+			  color: 'rgba(0,0,0,0.5)',
+			  size:10,
+			  x:5,
+			  y:5
+			},
+			shape: 'image', //'circularImage',
+			shapeProperties: {
+			  borderDashes: false, // only for borders
+			  borderRadius: 6,     // only for box shape
+			  interpolation: false,  // only for image and circularImage shapes
+			  useImageSize: false,  // only for image and circularImage shapes
+			  useBorderWithImage: false  // only for image shape
+			},
+			size: 40,
+			title: undefined,
+			value: undefined,
+			widthConstraint: false
+		  },
+		  interaction: {
+			hover: true,
+			selectConnectedEdges: false,
+			zoomView: true
+		  },
+		groups: {
+			'groupA': {
+				color: '#FF9900' // orange
+			},
+			'groupB': {
+				color: "#2B7CE9" // blue
+			},
+			'groupC': {
+				color: "#5A1E5C" // purple
+			},
+			'groupD': {
+				color: "#ffffff", // red
+                                scaling: {
+                                   label: {enabled: true }
+                                },
+                                font: { size: 30 }
+			}
+		},
+           edges: {
+             length: 300
+           }
+	};
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+	
+    network.fit();
+
+        network.once('stabilized', function() {
+		var scaleOption = { scale : 0.4 };
+		network.moveTo(scaleOption);
+	})
+
+    network.on("click", function (properties) {
+        properties.event = "[original event]";
+        //document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(properties, null, 4); //JSON.stringify(obj, replacer, white_space_for_readability_purposes)
+        console.log('click event, getNodeAt returns: ' + this.getNodeAt(properties.pointer.DOM));
+		
+        displayDetails(properties.nodes);
+    });
+	//On mouse over
+	network.on("hoverNode", function (properties) {
+		properties.event = "[original event]";
+		if( ([27, 29, 30].includes(('' + properties.node)*1 )) ){
+			network.canvas.body.container.style.cursor = 'pointer';
+		}
+	});
+	//On mouse leave
+	network.on("blurNode", function (properties) {
+		properties.event = "[original event]";
+		if( ([27, 29, 30].includes(('' + properties.node)*1 )) ){
+			network.canvas.body.container.style.cursor = 'default';
+		}
+    });
+</script>
+<script>
+	function displayDetails(nodeId){
+	        
+		if( ([27, 29, 30].includes((''+nodeId)*1 )) ){
+		
+			$('#title').html( '<h1>' + document.getElementById('Node_' + nodeId).name + '</h1>' );
+			$('#details').html( document.getElementById('Node_' + nodeId).value );
+                        $('#details_box').css('opacity', '1');
+                        $('#mynetwork').animate({width:'55%'}, 500);
+                        $('#details_box').css('display','block');
+
+		}
+	}
+network.fit();
+</script>
+
+<!-- Styling Script -->
+<script>
+var canvae = document.getElementsByTagName('canvas')[0];
+var ctx = canvae.getContext('2d');
+  ctx.canvas.width  = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+
+void(canvae.style.position = 'absolute');
+void(canvae.style.height = '700px');
+
+
+//Changes shall apply under void()
+// Upper black toolbar stays there	id = 'top_menu_14'  -> Could be display:block
+// Main div wrapper contains code and all other stuff	id = 'content'	-> Change id to 'content2'
+//		Reason: iGEM puts everything in document.getElementById('content') - change id - cause element 404
+void(document.getElementById('content').id = 'content0')
+
+// Div (placeholder) containing the iGEM logo and some text	id = 'top_title' -> Apply display: none
+void(document.getElementById('top_title').style.display = 'none');
+
+// Small icon in the top black toolbar	id = 'bars_item' -> Apply display: none
+void(document.getElementById('bars_item').style.display = 'none');
+// Same application for it's side effect (display an ugly div by default)
+
+void(document.getElementById('user_item').style.display = 'none');
+void(document.getElementById('sideMenu').style.display = 'none');
+var element = document.getElementById('home_logo');
+element.outerHTML = '';
+delete element;
+</script>
+
+</body>
+</html>
